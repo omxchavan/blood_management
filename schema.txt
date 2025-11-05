@@ -1,0 +1,352 @@
+
+
+const userSchema = new mongoose.Schema({
+  // _id is automatically created by MongoDB
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['donor', 'bloodbank', 'hospital', 'admin'],
+    required: true
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { timestamps: true }); // Adds createdAt and updatedAt automatically
+
+
+module.exports = mongoose.model('User', userSchema);
+const donorSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  fullName: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  bloodGroup: {
+    type: String,
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    required: true
+  },
+  dateOfBirth: {
+    type: Date,
+    required: true
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'other'],
+    required: true
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    pincode: String
+  },
+  lastDonationDate: Date,
+  isAvailable: {
+    type: Boolean,
+    default: true
+  },
+  medicalHistory: {
+    diseases: [String],
+    medications: [String],
+    allergies: [String]
+  },
+  role: {
+    type: String,
+    default: 'donor'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { timestamps: true });
+
+donorSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  const bcrypt = require('bcryptjs');
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+donorSchema.methods.comparePassword = async function(candidatePassword) {
+  const bcrypt = require('bcryptjs');
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+module.exports = mongoose.model('Donor', donorSchema);
+
+// models/BloodBank.js
+const bloodBankSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  registrationNumber: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    pincode: String,
+    coordinates: {
+      lat: Number,
+      lng: Number
+    }
+  },
+  inventory: [{
+    bloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+    },
+    quantity: {
+      type: Number,
+      default: 0
+    },
+    lastUpdated: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  operatingHours: {
+    open: String,
+    close: String
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  role: {
+    type: String,
+    default: 'bloodbank'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { timestamps: true });
+
+bloodBankSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  const bcrypt = require('bcryptjs');
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+bloodBankSchema.methods.comparePassword = async function(candidatePassword) {
+  const bcrypt = require('bcryptjs');
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+module.exports = mongoose.model('BloodBank', bloodBankSchema);
+
+// models/Hospital.js
+const hospitalSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  registrationNumber: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    pincode: String,
+    coordinates: {
+      lat: Number,
+      lng: Number
+    }
+  },
+  emergencyContact: {
+    type: String,
+    required: true
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  role: {
+    type: String,
+    default: 'hospital'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, { timestamps: true });
+
+hospitalSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  const bcrypt = require('bcryptjs');
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+hospitalSchema.methods.comparePassword = async function(candidatePassword) {
+  const bcrypt = require('bcryptjs');
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+module.exports = mongoose.model('Hospital', hospitalSchema);
+
+// models/BloodRequest.js
+const bloodRequestSchema = new mongoose.Schema({
+  requestedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Hospital',
+    required: true
+  },
+  patientName: {
+    type: String,
+    required: true
+  },
+  bloodGroup: {
+    type: String,
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    required: true
+  },
+  unitsRequired: {
+    type: Number,
+    required: true,
+    min: 1
+  },
+  urgency: {
+    type: String,
+    enum: ['low', 'medium', 'high', 'critical'],
+    default: 'medium'
+  },
+  requiredBy: {
+    type: Date,
+    required: true
+  },
+  reason: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'fulfilled', 'rejected', 'cancelled'],
+    default: 'pending'
+  },
+  fulfilledBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'BloodBank'
+  },
+  fulfilledAt: Date,
+  notes: String
+}, { timestamps: true });
+
+module.exports = mongoose.model('BloodRequest', bloodRequestSchema);
+
+// models/Donation.js
+const donationSchema = new mongoose.Schema({
+  donor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Donor',
+    required: true
+  },
+  bloodBank: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'BloodBank',
+    required: true
+  },
+  bloodGroup: {
+    type: String,
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true
+  },
+  donationDate: {
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: String,
+    enum: ['scheduled', 'completed', 'cancelled', 'rejected'],
+    default: 'scheduled'
+  },
+  testResults: {
+    hivStatus: String,
+    hepatitisStatus: String,
+    otherTests: String,
+    approved: {
+      type: Boolean,
+      default: false
+    }
+  },
+  notes: String
+}, { timestamps: true });
+
+module.exports = mongoose.model('Donation', donationSchema);

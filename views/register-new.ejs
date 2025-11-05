@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Blood Bank System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.6s ease-out;
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 2s ease-in-out infinite;
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .input-enhanced {
+        transition: all 0.3s ease;
+      }
+      .input-enhanced:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.2);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+        transition: all 0.3s ease;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(220, 38, 38, 0.4);
+      }
+      .role-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .role-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      .role-card.selected {
+        border-color: #dc2626;
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-red-50 via-pink-50 to-red-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-20 left-10 w-96 h-96 bg-red-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
+      <div class="absolute top-40 right-10 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style="animation-delay: 1s;"></div>
+      <div class="absolute -bottom-20 left-1/2 w-96 h-96 bg-red-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto relative z-10">
+      <!-- Header -->
+      <div class="text-center mb-8 animate-fadeIn">
+        <div class="flex justify-center mb-6">
+          <div class="relative">
+            <div class="absolute inset-0 bg-red-600 rounded-full blur-xl opacity-30 animate-pulse"></div>
+            <div class="relative bg-gradient-to-br from-red-500 to-red-700 p-4 rounded-2xl shadow-2xl animate-float">
+              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <h2 class="mt-6 text-5xl font-extrabold gradient-text mb-3">Create Your Account</h2>
+        <p class="text-lg text-gray-600 font-medium">Join the Blood Bank Management System and start saving lives</p>
+      </div>
+
+      <!-- Form Container -->
+      <div class="glass-effect shadow-2xl rounded-2xl p-8 animate-fadeIn">
+        <% if (error) { %>
+        <div class="mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg animate-fadeIn">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="font-medium"><%= error %></p>
+          </div>
+        </div>
+        <% } %>
+
+        <form action="/register" method="POST" class="space-y-8" id="registrationForm">
+          <!-- Step 1: Basic Information -->
+          <div class="border-b border-gray-200 pb-8">
+            <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center">
+              <svg class="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              Basic Information
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                  <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                  </svg>
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="input-enhanced w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="your.email@example.com"
+                />
+              </div>
+
+              <div>
+                <label for="password" class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                  <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                  Password *
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  minlength="6"
+                  class="input-enhanced w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Minimum 6 characters"
+                />
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <label class="block text-sm font-semibold text-gray-700 mb-4">
+                Select Your Role *
+              </label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="role-card border-2 border-gray-200 rounded-xl p-4 text-center" onclick="selectRole('bloodbank')">
+                  <div class="flex justify-center mb-2">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                      <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <h4 class="font-semibold text-gray-800">Blood Bank</h4>
+                  <p class="text-sm text-gray-600 mt-1">I manage a blood bank</p>
+                </div>
+                
+                <div class="role-card border-2 border-gray-200 rounded-xl p-4 text-center" onclick="selectRole('hospital')">
+                  <div class="flex justify-center mb-2">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                      <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <h4 class="font-semibold text-gray-800">Hospital</h4>
+                  <p class="text-sm text-gray-600 mt-1">I represent a hospital</p>
+                </div>
+              </div>
+              <input type="hidden" id="role" name="role" required>
+              <p class="mt-3 text-sm text-gray-500">Select your organization type</p>
+              <div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
+                <div class="flex items-start">
+                  <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <h5 class="text-sm font-semibold text-blue-800">For Blood Donors</h5>
+                    <p class="text-sm text-blue-700 mt-1">If you want to donate blood, you can schedule your donation directly without registration. Your account will be created automatically when you book your first donation.</p>
+                    <a href="/#donationForm" class="text-sm text-blue-600 hover:text-blue-800 font-medium mt-2 inline-flex items-center">
+                      Schedule Donation →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Blood Bank Specific Fields -->
+          <div id="bloodbankFields" class="hidden border-b pb-6">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+              Blood Bank Information
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  for="bb_name"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Blood Bank Name *
+                </label>
+                <input
+                  type="text"
+                  id="bb_name"
+                  name="name"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Enter blood bank name"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="bb_regNumber"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Registration Number *
+                </label>
+                <input
+                  type="text"
+                  id="bb_regNumber"
+                  name="registrationNumber"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="BB-XXXX-XXXX"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="bb_phone"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  id="bb_phone"
+                  name="phone"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Enter phone number"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="bb_email"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Contact Email *
+                </label>
+                <input
+                  type="email"
+                  id="bb_email"
+                  name="contactEmail"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="contact@bloodbank.com"
+                />
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <h4 class="text-lg font-semibold text-gray-800 mb-3">Address</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label
+                    for="bb_street"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Street Address *
+                  </label>
+                  <input
+                    type="text"
+                    id="bb_street"
+                    name="street"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="123 Main Street"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="bb_city"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    City *
+                  </label>
+                  <input
+                    type="text"
+                    id="bb_city"
+                    name="city"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="City name"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="bb_state"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    State *
+                  </label>
+                  <input
+                    type="text"
+                    id="bb_state"
+                    name="state"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="State name"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="bb_pincode"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Pincode *
+                  </label>
+                  <input
+                    type="text"
+                    id="bb_pincode"
+                    name="pincode"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="123456"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <h4 class="text-lg font-semibold text-gray-800 mb-3">
+                Operating Hours
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    for="bb_openTime"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Opening Time *
+                  </label>
+                  <input
+                    type="time"
+                    id="bb_openTime"
+                    name="openTime"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="bb_closeTime"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Closing Time *
+                  </label>
+                  <input
+                    type="time"
+                    id="bb_closeTime"
+                    name="closeTime"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hospital Specific Fields -->
+          <div id="hospitalFields" class="hidden border-b pb-6">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+              Hospital Information
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  for="h_name"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Hospital Name *
+                </label>
+                <input
+                  type="text"
+                  id="h_name"
+                  name="name"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Enter hospital name"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="h_regNumber"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Registration Number *
+                </label>
+                <input
+                  type="text"
+                  id="h_regNumber"
+                  name="registrationNumber"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="H-XXXX-XXXX"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="h_phone"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  id="h_phone"
+                  name="phone"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Enter phone number"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="h_emergency"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Emergency Contact *
+                </label>
+                <input
+                  type="tel"
+                  id="h_emergency"
+                  name="emergencyContact"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="24/7 emergency number"
+                />
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <h4 class="text-lg font-semibold text-gray-800 mb-3">Address</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label
+                    for="h_street"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Street Address *
+                  </label>
+                  <input
+                    type="text"
+                    id="h_street"
+                    name="street"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="123 Main Street"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="h_city"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    City *
+                  </label>
+                  <input
+                    type="text"
+                    id="h_city"
+                    name="city"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="City name"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="h_state"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    State *
+                  </label>
+                  <input
+                    type="text"
+                    id="h_state"
+                    name="state"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="State name"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    for="h_pincode"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Pincode *
+                  </label>
+                  <input
+                    type="text"
+                    id="h_pincode"
+                    name="pincode"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    placeholder="123456"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Submit Button -->
+          <div class="flex justify-center space-x-4 pt-6">
+            <a
+              href="/login"
+              class="px-6 py-3 border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 font-semibold"
+            >
+              Already have an account?
+            </a>
+            <button
+              type="submit"
+              class="btn-primary px-8 py-3 text-white rounded-xl font-semibold shadow-lg flex items-center"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+              Create Account
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Back to home -->
+      <div class="text-center mt-6">
+        <a href="/" class="text-sm text-red-600 hover:text-red-500 transition">
+          ← Back to home
+        </a>
+      </div>
+    </div>
+
+    <script>
+      function selectRole(role) {
+        // Remove selected class from all cards
+        document.querySelectorAll('.role-card').forEach(card => {
+          card.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked card
+        event.currentTarget.classList.add('selected');
+        
+        // Set hidden input value
+        document.getElementById('role').value = role;
+        
+        // Toggle role fields
+        toggleRoleFields();
+      }
+
+      function toggleRoleFields() {
+        const role = document.getElementById('role').value;
+        const bloodbankFields = document.getElementById('bloodbankFields');
+        const hospitalFields = document.getElementById('hospitalFields');
+
+        // Hide all role-specific sections
+        bloodbankFields.classList.add('hidden');
+        hospitalFields.classList.add('hidden');
+
+        // Remove required attributes and disable all role-specific fields
+        const roleInputs = document.querySelectorAll('#bloodbankFields input, #hospitalFields input');
+        roleInputs.forEach(input => {
+          input.removeAttribute('required');
+          input.setAttribute('disabled', 'disabled');
+        });
+
+        // Show and set required for selected role
+        if (role === 'bloodbank') {
+          bloodbankFields.classList.remove('hidden');
+          document.querySelectorAll('#bloodbankFields input[id^="bb_"]').forEach(input => {
+            if (input.id !== 'bb_email') { // contactEmail is optional
+              input.setAttribute('required', 'required');
+            }
+            input.removeAttribute('disabled');
+          });
+        } else if (role === 'hospital') {
+          hospitalFields.classList.remove('hidden');
+          document.querySelectorAll('#hospitalFields input[id^="h_"]').forEach(input => {
+            input.setAttribute('required', 'required');
+            input.removeAttribute('disabled');
+          });
+        }
+      }
+
+      // Add loading state to form
+      document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        const button = this.querySelector('button[type="submit"]');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Creating Account...';
+        button.disabled = true;
+        
+        // Re-enable after 5 seconds in case of error
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }, 5000);
+      });
+
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        toggleRoleFields();
+      });
+    </script>
+        <script>
+  // Auto-dismiss alerts after 3 seconds
+  window.addEventListener('DOMContentLoaded', () => {
+    const alerts = document.querySelectorAll('[role="alert"]');
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        alert.style.transition = 'opacity 0.5s ease-out';
+        alert.style.opacity = '0';
+        setTimeout(() => {
+          alert.remove();
+        }, 500);
+      }, 3000);
+    });
+  });
+</script>
+  </body>
+</html>

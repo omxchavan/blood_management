@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Request Success</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen p-6">
+
+  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg text-center">
+    <h1 class="text-2xl font-bold text-red-600 mb-4"><%= message %></h1>
+
+    <p class="text-lg font-medium mb-6">
+      🧠 <span class="font-semibold">ML Prediction:</span>
+      <span class="text-blue-600"><%= prediction %></span>
+    </p>
+
+    <% if (donors.length > 0) { %>
+      <h2 class="text-xl font-semibold mb-4 text-green-600">Top 3 Recommended Donors</h2>
+
+      <% donors.forEach((donor, index) => { %>
+        <div class="bg-gray-50 border rounded-xl p-4 mb-3 text-left shadow-sm hover:shadow-md transition">
+          <p class="font-semibold text-lg text-gray-900">#<%= index + 1 %> — <%= donor.fullName %></p>
+          <p class="text-sm text-gray-600">📞 <%= donor.phone %></p>
+          <p class="text-sm text-gray-600">🏙️ <%= donor.address.city %>, <%= donor.address.state %></p>
+          <p class="text-sm text-gray-600">🩸 <%= donor.bloodGroup %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="text-gray-500 mt-4">No matching donors found nearby.</p>
+    <% } %>
+
+    <a href="/hospital-dashboard" class="inline-block mt-6 px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow hover:bg-red-600 transition">
+      Go Back to Dashboard
+    </a>
+  </div>
+
+</body>
+</html>

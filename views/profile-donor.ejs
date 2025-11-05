@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donor Profile - Blood Bank System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-red-600 text-white shadow-lg">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            <h1 class="text-2xl font-bold">Donor Profile</h1>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <a href="/" class="hover:text-gray-200 transition">Home</a>
+            <a href="/profile" class="hover:text-gray-200 transition">Profile</a>
+            <a href="/logout" class="bg-red-700 px-4 py-2 rounded hover:bg-red-800 transition">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8">
+      <div class="max-w-4xl mx-auto">
+        <% if (donor) { %>
+        <!-- Profile Header -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-4">
+              <div class="bg-red-100 rounded-full p-4">
+                <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold text-gray-800"><%= donor.fullName %></h2>
+                <p class="text-gray-600">Blood Donor</p>
+              </div>
+            </div>
+            <div>
+              <span class="inline-flex items-center px-6 py-3 rounded-full text-lg font-bold bg-red-100 text-red-800">
+                <%= donor.bloodGroup %>
+              </span>
+            </div>
+          </div>
+
+          <!-- Basic Information -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Phone Number</h3>
+              <p class="text-lg font-semibold text-gray-800"><%= donor.phone %></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Gender</h3>
+              <p class="text-lg font-semibold text-gray-800 capitalize"><%= donor.gender %></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Date of Birth</h3>
+              <p class="text-lg font-semibold text-gray-800">
+                <%= new Date(donor.dateOfBirth).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+              </p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Availability Status</h3>
+              <p class="text-lg font-semibold <%= donor.isAvailable ? 'text-green-600' : 'text-red-600' %>">
+                <%= donor.isAvailable ? 'Available to Donate' : 'Not Available' %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Information -->
+        <% if (donor.address && (donor.address.street || donor.address.city)) { %>
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Address
+          </h3>
+          <div class="space-y-2">
+            <% if (donor.address.street) { %><p class="text-gray-700"><%= donor.address.street %></p><% } %>
+            <p class="text-gray-700">
+              <%= donor.address.city || '' %><% if (donor.address.city && donor.address.state) { %>, <% } %><%= donor.address.state || '' %>
+              <% if (donor.address.pincode) { %> - <%= donor.address.pincode %><% } %>
+            </p>
+          </div>
+        </div>
+        <% } %>
+
+        <!-- Donation History -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Donation History
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-50 rounded-lg p-6">
+              <p class="text-gray-600 text-sm mb-1">Last Donation</p>
+              <p class="text-2xl font-bold text-gray-800">
+                <% if (donor.lastDonationDate) { %>
+                  <%= new Date(donor.lastDonationDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                <% } else { %>
+                  Never
+                <% } %>
+              </p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-6">
+              <p class="text-gray-600 text-sm mb-1">Eligible to Donate</p>
+              <%
+              let canDonate = true;
+              let nextDonationDate = null;
+              if (donor.lastDonationDate) {
+                const lastDate = new Date(donor.lastDonationDate);
+                const threeMonthsLater = new Date(lastDate);
+                threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+                canDonate = new Date() >= threeMonthsLater;
+                nextDonationDate = threeMonthsLater;
+              }
+              %>
+              <p class="text-2xl font-bold <%= canDonate ? 'text-green-600' : 'text-red-600' %>">
+                <% if (canDonate) { %>
+                  Yes
+                <% } else { %>
+                  <%= nextDonationDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+                <% } %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical Information -->
+        <% if (donor.medicalHistory && (donor.medicalHistory.diseases.length > 0 || donor.medicalHistory.medications.length > 0 || donor.medicalHistory.allergies.length > 0)) { %>
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Medical Information
+          </h3>
+          <div class="space-y-4">
+            <% if (donor.medicalHistory.diseases && donor.medicalHistory.diseases.length > 0) { %>
+            <div>
+              <h4 class="font-semibold text-gray-700 mb-2">Medical Conditions:</h4>
+              <div class="flex flex-wrap gap-2">
+                <% donor.medicalHistory.diseases.forEach(function(disease) { %>
+                  <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm"><%= disease %></span>
+                <% }); %>
+              </div>
+            </div>
+            <% } %>
+            <% if (donor.medicalHistory.medications && donor.medicalHistory.medications.length > 0) { %>
+            <div>
+              <h4 class="font-semibold text-gray-700 mb-2">Medications:</h4>
+              <div class="flex flex-wrap gap-2">
+                <% donor.medicalHistory.medications.forEach(function(med) { %>
+                  <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"><%= med %></span>
+                <% }); %>
+              </div>
+            </div>
+            <% } %>
+            <% if (donor.medicalHistory.allergies && donor.medicalHistory.allergies.length > 0) { %>
+            <div>
+              <h4 class="font-semibold text-gray-700 mb-2">Allergies:</h4>
+              <div class="flex flex-wrap gap-2">
+                <% donor.medicalHistory.allergies.forEach(function(allergy) { %>
+                  <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm"><%= allergy %></span>
+                <% }); %>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-600 text-sm">Member Since</p>
+                <p class="text-xl font-bold text-gray-800 mt-2">
+                  <%= new Date(donor.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) %>
+                </p>
+              </div>
+              <div class="bg-red-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-600 text-sm">Profile Status</p>
+                <p class="text-xl font-bold text-green-600 mt-2">Active</p>
+              </div>
+              <div class="bg-green-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a href="/" onclick="document.getElementById('donationForm').scrollIntoView({behavior: 'smooth'})" class="flex items-center justify-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Schedule Donation
+            </a>
+            <a href="/bloodBank/allBanks" class="flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              Find Blood Banks
+            </a>
+          </div>
+        </div>
+
+        <% } else { %>
+        <!-- No Profile Yet -->
+        <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+          <div class="bg-yellow-100 rounded-full p-6 w-24 h-24 mx-auto mb-6">
+            <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Complete Your Donor Profile</h2>
+          <p class="text-gray-600 mb-6">You haven't completed your donor profile yet. Complete it to start donating blood and saving lives!</p>
+          <a href="/donor/createProfile" class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Complete Profile
+          </a>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+      <div class="container mx-auto px-6 text-center">
+        <p>&copy; 2025 Blood Bank Management System. All rights reserved.</p>
+      </div>
+    </footer>
+        <script>
+  // Auto-dismiss alerts after 3 seconds
+  window.addEventListener('DOMContentLoaded', () => {
+    const alerts = document.querySelectorAll('[role="alert"]');
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        alert.style.transition = 'opacity 0.5s ease-out';
+        alert.style.opacity = '0';
+        setTimeout(() => {
+          alert.remove();
+        }, 500);
+      }, 3000);
+    });
+  });
+</script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory of <%= bank.name %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg p-6">
+    <h2 class="text-2xl font-bold mb-4 text-center text-red-600">Inventory Details</h2>
+    <h3 class="text-xl mb-4 text-center font-semibold"><%= bank.name %></h3>
+    <table class="w-full table-auto border border-gray-300 rounded-lg mb-4">
+      <thead>
+        <tr class="bg-red-100 text-gray-700">
+          <th class="border border-gray-300 px-4 py-2">Blood Group</th>
+          <th class="border border-gray-300 px-4 py-2">Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (bank.inventory && bank.inventory.length > 0) { %>
+          <% bank.inventory.forEach(function(item) { %>
+            <tr class="hover:bg-gray-100 transition">
+              <td class="border border-gray-300 px-4 py-2 text-center"><%= item.bloodGroup %></td>
+              <td class="border border-gray-300 px-4 py-2 text-center"><%= item.quantity %></td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="2" class="border border-gray-300 px-4 py-2 text-center text-gray-500">No inventory data available</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <a href="/bloodBank/allBanks" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">Back to List</a>
+    </div>
+  </div>
+</body>
+</html>

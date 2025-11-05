@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Bank Profile - Blood Bank System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-red-600 text-white shadow-lg">
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            <h1 class="text-2xl font-bold">Blood Bank Profile</h1>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <a href="/" class="hover:text-gray-200 transition">Home</a>
+            <a href="/bloodbank-dashboard" class="hover:text-gray-200 transition">Dashboard</a>
+            <a href="/profile" class="hover:text-gray-200 transition">Profile</a>
+            <a href="/logout" class="bg-red-700 px-4 py-2 rounded hover:bg-red-800 transition">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8">
+      <div class="max-w-4xl mx-auto">
+        <!-- Profile Header -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-4">
+              <div class="bg-red-100 rounded-full p-4">
+                <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold text-gray-800"><%= bank.name %></h2>
+                <p class="text-gray-600">Blood Bank</p>
+              </div>
+            </div>
+            <div>
+              <% if (bank.isVerified) { %>
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                  Verified
+                </span>
+              <% } else { %>
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  Pending Verification
+                </span>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Basic Information -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Registration Number</h3>
+              <p class="text-lg font-semibold text-gray-800"><%= bank.registrationNumber %></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Email</h3>
+              <p class="text-lg font-semibold text-gray-800"><%= bank.email %></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Phone</h3>
+              <p class="text-lg font-semibold text-gray-800"><%= bank.phone %></p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Operating Hours</h3>
+              <p class="text-lg font-semibold text-gray-800">
+                <%= bank.operatingHours.open %> - <%= bank.operatingHours.close %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Address
+          </h3>
+          <div class="space-y-2">
+            <p class="text-gray-700"><%= bank.address.street %></p>
+            <p class="text-gray-700"><%= bank.address.city %>, <%= bank.address.state %> - <%= bank.address.pincode %></p>
+          </div>
+        </div>
+
+        <!-- Inventory Summary -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            </svg>
+            Blood Inventory
+          </h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <% bank.inventory.forEach(function(item) { %>
+              <div class="bg-gray-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-red-600 mb-1"><%= item.bloodGroup %></div>
+                <div class="text-3xl font-bold text-gray-800 mb-1"><%= item.quantity %></div>
+                <div class="text-sm text-gray-600">units</div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-600 text-sm">Total Blood Units</p>
+                <p class="text-3xl font-bold text-gray-800 mt-2">
+                  <%
+                  let total = 0;
+                  bank.inventory.forEach(function(item) {
+                    total += item.quantity || 0;
+                  });
+                  %>
+                  <%= total %>
+                </p>
+              </div>
+              <div class="bg-red-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-600 text-sm">Member Since</p>
+                <p class="text-xl font-bold text-gray-800 mt-2">
+                  <%= new Date(bank.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) %>
+                </p>
+              </div>
+              <div class="bg-blue-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-600 text-sm">Last Updated</p>
+                <p class="text-xl font-bold text-gray-800 mt-2">
+                  <%= new Date(bank.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+                </p>
+              </div>
+              <div class="bg-green-100 rounded-full p-3">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Quick Actions</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a href="/bloodbank-dashboard" class="flex items-center justify-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+              </svg>
+              Go to Dashboard
+            </a>
+            <a href="/request/allRequests" class="flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              View Requests
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+      <div class="container mx-auto px-6 text-center">
+        <p>&copy; 2025 Blood Bank Management System. All rights reserved.</p>
+      </div>
+    </footer>
+        <script>
+  // Auto-dismiss alerts after 3 seconds
+  window.addEventListener('DOMContentLoaded', () => {
+    const alerts = document.querySelectorAll('[role="alert"]');
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        alert.style.transition = 'opacity 0.5s ease-out';
+        alert.style.opacity = '0';
+        setTimeout(() => {
+          alert.remove();
+        }, 500);
+      }, 3000);
+    });
+  });
+</script>
+  </body>
+</html>

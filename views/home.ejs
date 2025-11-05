@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Bank System - Saving Lives Together</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Enhanced CSS for aesthetic appeal */
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.05); }
+    }
+    @keyframes floatMovement {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    /* Animation classes */
+    .animate-fadeIn { animation: fadeIn 0.8s ease-out; }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-pulse-slow { animation: pulse 6s ease-in-out infinite; }
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      filter: blur(60px);
+      animation: pulse 6s ease-in-out infinite, floatMovement 10s ease-in-out infinite alternate;
+    }
+    .shape1 {
+      width: 400px; height: 400px;
+      background: linear-gradient(135deg, #f87171, #ef4444);
+      top: -150px; left: -150px;
+      animation-delay: 0s;
+    }
+    .shape2 {
+      width: 350px; height: 350px;
+      background: linear-gradient(135deg, #fbb6ce, #ec4899);
+      bottom: -150px; right: -150px;
+      animation-delay: 2s;
+    }
+    .shape3 {
+      width: 300px; height: 300px;
+      background: linear-gradient(135deg, #86efac, #22c55e);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 4s;
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    /* Card Hover Effect */
+    .card-hover {
+      transition: all 0.4s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Primary Button */
+    .btn-primary {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #991b1b, #7f1d1d);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(220, 38, 38, 0.4);
+    }
+
+    /* Alerts */
+    [role="alert"] {
+      font-family: 'Arial', sans-serif;
+      font-weight: 600;
+      border-radius: 8px;
+      max-width: 90%;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-red-50 via-pink-50 to-red-100 min-h-screen font-sans text-gray-700">
+
+  <!-- Animated Background Shapes -->
+  <div class="fixed inset-0 -z-10 pointer-events-none">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <div class="shape shape3"></div>
+  </div>
+
+  <!-- Success/Error Alerts -->
+  <% if ((typeof success !== 'undefined' && success) || (typeof message !== 'undefined' && message)) { %>
+  <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 fixed top-4 left-1/2 transform -translate-x-1/2 z-50 shadow-lg animate-fadeIn" role="alert">
+    <div class="flex items-center space-x-2">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="font-semibold">Success!</p>
+      <p class="ml-2 font-medium">
+        <% if (typeof success !== 'undefined' && success) { %>
+          <%= success %>
+        <% } else if (typeof message !== 'undefined' && message) { %>
+          <%= message %>
+        <% } %>
+      </p>
+    </div>
+  </div>
+  <% } %>
+  
+  <% if (typeof error !== 'undefined' && error) { %>
+  <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 fixed top-4 left-1/2 transform -translate-x-1/2 z-50 shadow-lg animate-fadeIn" role="alert">
+    <div class="flex items-center space-x-2">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="font-semibold">Error!</p>
+      <p class="ml-2 font-medium"><%= error %></p>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Navigation -->
+  <nav class="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-40 border-b border-red-100">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <div class="absolute inset-0 bg-red-600 rounded-full blur-lg opacity-30 animate-pulse"></div>
+            <div class="relative bg-gradient-to-br from-red-500 to-red-700 p-2 rounded-xl shadow-lg">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+              </svg>
+            </div>
+          </div>
+          <h1 class="text-2xl font-bold gradient-text">BloodBank System</h1>
+        </div>
+        <!-- Links -->
+        <div class="flex items-center space-x-6 font-medium text-gray-700">
+          <a href="/" class="hover:text-red-600 transition-colors duration-200">Home</a>
+          <% if (typeof user !== 'undefined' && user) { %>
+            <% if (user.role === 'hospital') { %>
+              <a href="/hospital-dashboard" class="hover:text-red-600 transition-colors duration-200">Dashboard</a>
+              <a href="/bloodBank/allBanks" class="hover:text-red-600 transition-colors duration-200">Find Blood Banks</a>
+            <% } else if (user.role === 'bloodbank') { %>
+              <a href="/bloodbank-dashboard" class="hover:text-red-600 transition-colors duration-200">Dashboard</a>
+              <a href="/request/allRequests" class="hover:text-red-600 transition-colors duration-200">All Requests</a>
+            <% } %>
+            <a href="/bloodBank/allBanks" class="hover:text-red-600 transition-colors duration-200">Blood Banks</a>
+            <a href="/profile" class="hover:text-red-600 transition-colors duration-200">Profile</a>
+            <a href="/logout" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-shadow duration-200 transform hover:scale-105">Logout</a>
+          <% } else { %>
+            <a href="/bloodBank/allBanks" class="hover:text-red-600 transition-colors duration-200">Find Blood Banks</a>
+            <a href="/login" class="hover:text-red-600 transition-colors duration-200">Login</a>
+            <a href="/register" class="btn-primary px-4 py-2 rounded-lg hover:scale-105 transition-transform duration-200">Register</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-24">
+    <div class="container mx-auto px-6 text-center relative z-10">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <!-- Logged In User -->
+        <% if (user.role === 'hospital') { %>
+          <div class="animate-fadeIn">
+            <div class="mb-6 animate-float">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-6 shadow-lg shadow-blue-200/50">
+                <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+              </div>
+            </div>
+            <h2 class="text-5xl font-bold mb-6 gradient-text">Welcome to Your Hospital Dashboard</h2>
+            <p class="text-xl text-gray-700 mb-10 max-w-2xl mx-auto">Manage blood requests and connect with blood banks efficiently</p>
+            <div class="flex justify-center space-x-4">
+              <a href="/hospital-dashboard" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:scale-105 transition-transform">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Go to Dashboard
+              </a>
+              <a href="/bloodBank/allBanks" class="bg-white text-red-600 border-2 border-red-200 px-8 py-4 rounded-xl font-semibold hover:bg-red-50 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                Find Blood Banks
+              </a>
+            </div>
+          </div>
+        <% } else if (user.role === 'bloodbank') { %>
+          <div class="animate-fadeIn">
+            <div class="mb-6 animate-float">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6 shadow-lg shadow-red-200/50">
+                <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+              </div>
+            </div>
+            <h2 class="text-5xl font-bold mb-6 gradient-text">Welcome to Your Blood Bank Dashboard</h2>
+            <p class="text-xl text-gray-700 mb-10 max-w-2xl mx-auto">Manage inventory, donations, and fulfill hospital requests</p>
+            <div class="flex justify-center space-x-4">
+              <a href="/bloodbank-dashboard" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:scale-105 transition-transform">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Go to Dashboard
+              </a>
+              <a href="/request/allRequests" class="bg-white text-red-600 border-2 border-red-200 px-8 py-4 rounded-xl font-semibold hover:bg-red-50 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                View Requests
+              </a>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="animate-fadeIn">
+            <div class="mb-6 animate-float">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6 shadow-lg shadow-red-200/50">
+                <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <h2 class="text-5xl font-bold mb-6 gradient-text">Thank You for Being a Life Saver!</h2>
+            <p class="text-xl text-gray-700 mb-10 max-w-2xl mx-auto">Your blood donation can save up to 3 lives. Schedule your next donation today!</p>
+            <div class="flex justify-center space-x-4">
+              <a href="/#donationForm" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:scale-105 transition-transform">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Schedule Donation
+              </a>
+              <a href="/bloodBank/allBanks" class="bg-white text-red-600 border-2 border-red-200 px-8 py-4 rounded-xl font-semibold hover:bg-red-50 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                Find Blood Banks
+              </a>
+            </div>
+          </div>
+        <% } %>
+      <% } else { %>
+        <!-- Guest User -->
+        <div class="animate-fadeIn">
+          <div class="mb-6 animate-float">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-red-100 rounded-full mb-8 shadow-lg shadow-red-200/50">
+              <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <h2 class="text-6xl font-bold mb-6 gradient-text">Save Lives Through Blood Donation</h2>
+          <p class="text-xl text-gray-700 mb-10 max-w-3xl mx-auto">Connecting donors, hospitals, and blood banks for efficient blood management. Every donation can save up to 3 lives.</p>
+          <div class="flex justify-center space-x-4 mb-12">
+            <button onclick="document.getElementById('donationForm').scrollIntoView({behavior: 'smooth'})" class="btn-primary text-white px-10 py-4 rounded-xl font-semibold shadow-lg hover:scale-105 transition-transform text-lg">
+              <svg class="w-6 h-6 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Donate Blood Now
+            </button>
+            <a href="/register" class="bg-white text-red-600 border-2 border-red-200 px-10 py-4 rounded-xl font-semibold hover:bg-red-50 transition-all duration-200 transform hover:scale-105 shadow-lg text-lg">
+              <svg class="w-6 h-6 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              </svg>
+              Register Organization
+            </a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Donation Form Section -->
+  <section id="donationForm" class="py-16 bg-gradient-to-br from-red-50 via-pink-50 to-red-100">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12 animate-fadeIn">
+          <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6 shadow-lg shadow-red-200/50">
+            <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </div>
+          <h2 class="text-4xl font-bold gradient-text mb-4">Schedule Your Blood Donation</h2>
+          <p class="text-xl text-gray-700 max-w-2xl mx-auto">Fill out the form below to schedule your life-saving donation. No registration required!</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl p-8 animate-fadeIn">
+          <form action="/donation/schedule" method="POST" class="space-y-8">
+            <!-- Personal Information -->
+            <div class="border-b border-gray-200 pb-8">
+              <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                Personal Information
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Full Name *</label>
+                  <input type="text" name="fullName" required placeholder="Enter your full name" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Phone Number *</label>
+                  <input type="tel" name="phone" required placeholder="Enter your phone number" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Email Address</label>
+                  <input type="email" name="email" placeholder="Enter your email (optional)" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Date of Birth *</label>
+                  <input type="date" name="dateOfBirth" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Gender *</label>
+                  <select name="gender" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300">
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Blood Group *</label>
+                  <select name="bloodGroup" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300">
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address Section -->
+            <div class="border-b border-gray-200 pb-8">
+              <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Address Information
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="group md:col-span-2">
+                  <label class="block text-sm font-semibold mb-2">Street Address</label>
+                  <input type="text" name="street" placeholder="Enter your street address" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">City</label>
+                  <input type="text" name="city" placeholder="Enter your city" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">State</label>
+                  <input type="text" name="state" placeholder="Enter your state" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Pincode</label>
+                  <input type="text" name="pincode" placeholder="Enter your pincode" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Medical Information -->
+            <div class="border-b border-gray-200 pb-8">
+              <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Medical Information
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Last Donation Date (if any)</label>
+                  <input type="date" name="lastDonationDate" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Medical Conditions</label>
+                  <input type="text" name="medicalConditions" placeholder="Any medical conditions?" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Current Medications</label>
+                  <input type="text" name="medications" placeholder="Current medications" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Allergies</label>
+                  <input type="text" name="allergies" placeholder="Any allergies?" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Donation Details -->
+            <div>
+              <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Donation Details
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Preferred Blood Bank *</label>
+                  <select name="bloodBank" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300">
+                    <option value="">Select Blood Bank</option>
+                    <% if (typeof bloodBanks !== 'undefined' && bloodBanks) { %>
+                      <% bloodBanks.forEach(function(bank) { %>
+                        <option value="<%= bank._id %>"><%= bank.name %> - <%= bank.address.city %></option>
+                      <% }); %>
+                    <% } %>
+                  </select>
+                </div>
+                <div class="group">
+                  <label class="block text-sm font-semibold mb-2">Preferred Donation Date *</label>
+                  <input type="date" name="donationDate" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300" />
+                </div>
+                <div class="group md:col-span-2">
+                  <label class="block text-sm font-semibold mb-2">Additional Notes</label>
+                  <textarea name="notes" rows="3" placeholder="Any additional information..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-200 hover:border-red-300"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center mt-8">
+              <button type="submit" class="btn-primary px-12 py-4 rounded-xl text-white font-bold text-lg shadow-lg flex items-center mx-auto hover:scale-105 transition-transform">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Schedule Donation
+              </button>
+              <p class="text-sm text-gray-500 mt-4">By submitting, you confirm you meet eligibility criteria for blood donation.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-12 gradient-text">Our Services</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition card-hover">
+          <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-center">Blood Bank Management</h3>
+          <p class="text-gray-600 text-center">Efficient tracking and management of blood inventory</p>
+        </div>
+
+        <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition card-hover">
+          <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-center">Hospital Requests</h3>
+          <p class="text-gray-600 text-center">Quick blood request system for hospitals</p>
+        </div>
+
+        <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition card-hover">
+          <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-center">Donor Registration</h3>
+          <p class="text-gray-600 text-center">Register and schedule blood donations easily</p>
+        </div>
+
+        <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition card-hover">
+          <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-center">Inventory Tracking</h3>
+          <p class="text-gray-600 text-center">Real-time blood availability tracking</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8 mt-16">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0 text-center md:text-left">
+          <h3 class="text-xl font-bold mb-2">Blood Bank Management System</h3>
+          <p class="text-gray-400">Connecting lives through blood donation</p>
+        </div>
+        <div class="text-center md:text-right text-gray-400 mt-4 md:mt-0">
+          <p>&copy; 2025 Blood Bank Management System. All rights reserved.</p>
+          <p class="mt-2 text-sm">Made with ❤️ for saving lives</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+
+    // Auto-dismiss alerts
+    window.addEventListener('DOMContentLoaded', () => {
+      const alerts = document.querySelectorAll('[role="alert"]');
+      alerts.forEach(alert => {
+        // Show alert immediately (already shown)
+        // Wait for 2 seconds then remove
+        setTimeout(() => {
+          alert.remove();
+        }, 2000);
+      });
+    });
+
+    // Form validation
+    const form = document.querySelector('form[action="/donation/schedule"]');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        const dobField = form.querySelector('[name="dateOfBirth"]');
+        if (dobField && dobField.value) {
+          const dob = new Date(dobField.value);
+          const age = Math.floor((new Date() - dob) / (365.25 * 24 * 60 * 60 * 1000));
+          if (age < 18 || age > 65) {
+            e.preventDefault();
+            alert('Donors must be between 18 and 65 years old.');
+            return;
+          }
+        }
+
+        const donationDateField = form.querySelector('[name="donationDate"]');
+        if (donationDateField && donationDateField.value) {
+          const donationDate = new Date(donationDateField.value);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          if (donationDate < today) {
+            e.preventDefault();
+            alert('Donation date must be today or a future date.');
+            return;
+          }
+        }
+      });
+
+      // Set minimum dates
+      const donationDateField = form.querySelector('[name="donationDate"]');
+      if (donationDateField) {
+        donationDateField.setAttribute('min', new Date().toISOString().split('T')[0]);
+      }
+
+      const dobField = form.querySelector('[name="dateOfBirth"]');
+      if (dobField) {
+        const maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 18);
+        dobField.setAttribute('max', maxDate.toISOString().split('T')[0]);
+      }
+    }
+  </script>
+</body>
+</html>
